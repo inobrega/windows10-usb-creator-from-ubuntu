@@ -41,9 +41,31 @@ w
 y
 EOF
 
-# Formata a partição como NTFS
-echo "Formatando a partição como NTFS..."
-sudo mkfs.ntfs -F ${PEN_DRIVE}1
+# ...
+
+# Perguntando ao usuário sobre o tipo de formatação
+read -p "Você deseja uma formatação rápida (f) ou completa (c)? [f/c]: " TIPO_FORMATACAO
+
+# Formatação do pen drive
+if [ "$TIPO_FORMATACAO" = "c" ]; then
+    echo "Realizando uma formatação completa (isso pode levar um tempo)..."
+    if [[ ${PEN_DRIVE} == *ntfs ]]; then
+        sudo mkfs.ntfs -F ${PEN_DRIVE}1
+    elif [[ ${PEN_DRIVE} == *exfat ]]; then
+        sudo mkfs.exfat ${PEN_DRIVE}1
+    else
+        sudo mkfs.fat -F32 ${PEN_DRIVE}1
+    fi
+else
+    echo "Realizando uma formatação rápida..."
+    if [[ ${PEN_DRIVE} == *ntfs ]]; then
+        sudo mkfs.ntfs -F -Q ${PEN_DRIVE}1
+    elif [[ ${PEN_DRIVE} == *exfat ]]; then
+        sudo mkfs.exfat -q ${PEN_DRIVE}1
+    else
+        sudo mkfs.fat -F32 -I ${PEN_DRIVE}1
+    fi
+fi
 
 # Montando a imagem ISO
 MOUNT_POINT="/mnt/windows10iso"

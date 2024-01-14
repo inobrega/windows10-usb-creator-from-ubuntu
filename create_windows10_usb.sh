@@ -35,7 +35,7 @@ y
 n
 1
 
-+550M
+
 ef00
 w
 y
@@ -57,9 +57,20 @@ echo "Montando o pen drive..."
 mkdir -p ${USB_MOUNT_POINT}
 sudo mount ${PEN_DRIVE}1 ${USB_MOUNT_POINT}
 
-# Copiando arquivos da ISO para o pen drive
+# Verifica se o rsync está instalado
+if ! command -v rsync &> /dev/null
+then
+    echo "O rsync não está instalado. Instalando rsync..."
+    sudo apt-get update && sudo apt-get install -y rsync
+else
+    echo "O rsync já está instalado, continuando..."
+fi
+
+# ...
+
+# Copiando arquivos da ISO para o pen drive usando rsync
 echo "Copiando arquivos para o pen drive. Isso pode levar alguns minutos..."
-sudo cp -r ${MOUNT_POINT}/* ${USB_MOUNT_POINT}/
+sudo rsync -ah --info=progress2 --no-perms --no-owner --no-group ${MOUNT_POINT}/ ${USB_MOUNT_POINT}/
 
 # Desmontando ISO e pen drive
 echo "Desmontando a imagem ISO e o pen drive..."

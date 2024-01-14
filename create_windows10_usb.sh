@@ -41,9 +41,9 @@ w
 y
 EOF
 
-# Formata a partição como FAT32
-echo "Formatando a partição como FAT32..."
-sudo mkfs.fat -F32 ${PEN_DRIVE}1
+# Formata a partição como NTFS
+echo "Formatando a partição como NTFS..."
+sudo mkfs.ntfs -F ${PEN_DRIVE}1
 
 # Montando a imagem ISO
 MOUNT_POINT="/mnt/windows10iso"

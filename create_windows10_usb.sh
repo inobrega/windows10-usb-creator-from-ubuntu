@@ -20,8 +20,21 @@ if [ "$CONFIRM" != "s" ]; then
   exit 1
 fi
 
-# Pedindo ao usuário o caminho da imagem ISO do Windows 10
-read -p "Insira o caminho completo para a imagem ISO do Windows 10: " ISO_PATH
+# URL da imagem ISO no S3
+ISO_URL="https://s3.sa-east-1.amazonaws.com/ilson.dev/downloads/Win10.iso"
+ISO_PATH="/tmp/Win10.iso" # Local temporário para salvar a ISO
+
+# Baixando a imagem ISO do Windows 10
+echo "Baixando a imagem ISO do Windows 10. Por favor, aguarde..."
+curl -L $ISO_URL -o $ISO_PATH --progress-bar
+
+# Verifica se o download foi bem-sucedido
+if [ $? -ne 0 ]; then
+    echo "O download da imagem ISO falhou. Verifique sua conexão e tente novamente."
+    exit 1
+fi
+
+echo "Download da imagem ISO completado."
 
 # Desmonta todas as partições do pen drive
 echo "Desmontando todas as partições do pen drive..."
